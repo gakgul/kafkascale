@@ -1,0 +1,85 @@
+
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+  servlet:
+    session:
+      timeout: 15m
+spring:
+  application:
+    name: "kafkasample"
+  profiles:
+    active: dev
+
+
+kafka:
+  maxPollIntervalMs: 3600000
+  requestTimeoutMs: 3630000 #must be larger than maxPollIntervalMs
+  sessionTimeoutSec: 30
+  log-enabled: false
+  comment-topic: COMMENT_TOPIC
+  post-topic: POST_TOPIC
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    show-sql: true
+  data:
+    mongodb:
+      uri: mongodb://admin:password@localhost:27017/mymongodb?authSource=admin
+#      database: mymongodb
+#      port: 27017
+#      host: localhost
+#      username: admin
+#      password: password
+logging:
+  level:
+    root: info
+    org.apache.tomcat.level: warn
+    org.apache.tomcat.util.net.level: warn
+    com.zaxxer.hikari.HikariConfig: debug
+    com.zaxxer.hikari: trace
+
+kafka:
+  bootstrapAddress: localhost:9092
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  data:
+    mongodb:
+      uri: mongodb://admin:password@localhost:27017/mymongodb?authSource=admin
+logging:
+  level:
+    root: debug
+
+kafka:
+  bootstrapAddress: localhost:9092
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    show-sql: false
+server:
+  port: 8080
+
+kafka:
+  bootstrapAddress: "**"
+
+logging:
+  level:
+    root: info
+
+
